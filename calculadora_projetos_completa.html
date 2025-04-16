@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora de Projetos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px; /* Levemente menor */
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px; /* Menor espaçamento entre os quadros */
+      justify-content: space-between;
+    }
+
+    .calculadora {
+      flex: 1 1 200px; /* Menor tamanho dos quadros */
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 12px; /* Menos padding */
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+      font-size: 14px; /* Texto um pouco menor */
+    }
+
+    label {
+      display: block;
+      margin-top: 8px;
+      font-weight: bold;
+      font-size: 14px; /* Tamanho da fonte do label levemente menor */
+    }
+
+    input {
+      width: 100%;
+      padding: 6px; /* Menos padding */
+      margin-top: 5px;
+      font-size: 14px; /* Fonte um pouco menor */
+      box-sizing: border-box;
+    }
+
+    .resultado {
+      margin-top: 12px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    small {
+      display: block;
+      margin-bottom: 8px;
+      color: #666;
+      font-size: 12px; /* Fonte menor para a descrição */
+    }
+
+    .resultado p {
+      margin: 5px 0;
+    }
+
+    .valor-hora {
+      font-size: 11px; /* Menor tamanho de fonte */
+      color: #444;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Calculadora de Projetos</h2>
+
+  <div class="grid">
+
+    <!-- Por Hora -->
+    <div class="calculadora">
+      <h3>Por Hora</h3>
+      <small>R$105 | R$74 | R$142 | R$186 por hora</small>
+      <label for="horas">Quantidade de Horas:</label>
+      <input type="number" id="horas" placeholder="Ex: 10" oninput="calcularHoras()">
+      <div class="resultado" id="resultadoHoras" style="display:none;"></div>
+      <div class="valor-hora">
+        <p>Demais Cadeias: R$ 105,00</p>
+        <p>Inclusão Produtiva: R$ 74,00</p>
+        <p>Agroindústria: R$ 142,00</p>
+        <p>Consultor Master: R$ 186,00</p>
+      </div>
+    </div>
+
+    <!-- Mais ATeG -->
+    <div class="calculadora">
+      <h3>Mais ATeG</h3>
+      <small>% Próprio: 60% | % Terceiro: 40%</small>
+      <label>Valor Total (R$):</label>
+      <input type="text" id="valorAteg" placeholder="Ex: 15000"
+        oninput="formatarInputMoeda(this, 'Ateg', 60, 40)">
+      <div class="resultado" id="resultadoAteg" style="display:none;"></div>
+    </div>
+
+    <!-- Incentivo -->
+    <div class="calculadora">
+      <h3>Incentivo</h3>
+      <small>% Próprio: 72,8% | % Terceiro: 27,2%</small>
+      <label>Valor Total (R$):</label>
+      <input type="text" id="valorIncentivo" placeholder="Ex: 10000"
+        oninput="formatarInputMoeda(this, 'Incentivo', 72.8, 27.2)">
+      <div class="resultado" id="resultadoIncentivo" style="display:none;"></div>
+    </div>
+
+    <!-- Agronordeste II -->
+    <div class="calculadora">
+      <h3>Agronordeste II</h3>
+      <small>% Próprio: 75,64% | % Terceiro: 24,36%</small>
+      <label>Valor Total (R$):</label>
+      <input type="text" id="valorAgro" placeholder="Ex: 10800"
+        oninput="formatarInputMoeda(this, 'Agro', 75.64, 24.36)">
+      <div class="resultado" id="resultadoAgro" style="display:none;"></div>
+    </div>
+
+    <!-- Parceria 1 -->
+    <div class="calculadora">
+      <h3>Parceria 1</h3>
+      <small>% Próprio: 50% | % Terceiro: 50%</small>
+      <label>Valor Total (R$):</label>
+      <input type="text" id="valorParceria" placeholder="Ex: 20000"
+        oninput="formatarInputMoeda(this, 'Parceria', 50, 50)">
+      <div class="resultado" id="resultadoParceria" style="display:none;"></div>
+    </div>
+
+  </div>
+
+  <script>
+    function calcularHoras() {
+      const horas = parseFloat(document.getElementById("horas").value);
+      const div = document.getElementById("resultadoHoras");
+
+      if (!isNaN(horas) && horas > 0) {
+        const demais = horas * 105;
+        const inclusao = horas * 74;
+        const agro = horas * 142;
+        const master = horas * 186;
+
+        div.innerHTML = `
+          <p>Demais Cadeias: R$ ${demais.toFixed(2).replace(".", ",")}</p>
+          <p>Inclusão Produtiva: R$ ${inclusao.toFixed(2).replace(".", ",")}</p>
+          <p>Agroindústria: R$ ${agro.toFixed(2).replace(".", ",")}</p>
+          <p>Consultor Master: R$ ${master.toFixed(2).replace(".", ",")}</p>
+        `;
+        div.style.display = "block";
+      } else {
+        div.style.display = "none";
+      }
+    }
+
+    function formatMoeda(valor) {
+      return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    }
+
+    function formatarInputMoeda(input, id, pProprio, pTerceiro) {
+      const apenasNumeros = input.value.replace(/\D/g, '');
+      const valorFloat = parseFloat(apenasNumeros) / 100;
+
+      const resultadoDiv = document.getElementById(`resultado${id}`);
+
+      if (!isNaN(valorFloat)) {
+        input.value = formatMoeda(valorFloat);
+        calcularProjeto(id, valorFloat, pProprio, pTerceiro);
+        resultadoDiv.style.display = 'block';
+      } else {
+        resultadoDiv.style.display = 'none';
+      }
+    }
+
+    function calcularProjeto(id, valorTotal, pProprio, pTerceiro) {
+      const valorProprio = valorTotal * (pProprio / 100);
+      const valorTerceiro = valorTotal * (pTerceiro / 100);
+      document.getElementById(`resultado${id}`).innerHTML = `
+        <p>Valor Próprio: R$ ${valorProprio.toFixed(2).replace(".", ",")}</p>
+        <p>Valor Terceiro: R$ ${valorTerceiro.toFixed(2).replace(".", ",")}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
